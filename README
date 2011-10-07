@@ -1,0 +1,14 @@
+==========
+LeaveMsg
+is a plugin that allows players to leave the server with a custom message.
+More info: http://dev.bukkit.org/server-mods/leavemsg-v1-0-1240/
+
+**CHANGELOG**
+
+Version 1.1
+*Fixed a bug where it kicks all players on the server
+*Fixed a bug where it displays two leave messages
+
+Version 1.0
+*Release
+==========
