@@ -1,0 +1,15 @@
+name: LeaveMsg
+author: TehAndrewRyan
+main: me.tehandrewryan.LeaveMsg.LeaveMsg
+version: 1.0
+description: >
+             Allows players to leave the server with a custom message.
+commands:
+  quit:
+    description: Leaves the server with a message.
+    permission: leavemsg.quit
+    usage: /<command> <reason>
+permissions:
+  leavemsg.quit:
+    default: op
+    description: Allows the player to leave with a custom message.
