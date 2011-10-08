@@ -1,5 +1,6 @@
 package me.tehandrewryan.LeaveMsg;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -10,12 +11,14 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 public class LeaveMsg extends JavaPlugin {
 	public static LeaveMsg plugin;
 	public final Logger logger = Logger.getLogger("Minecraft");
     private final BasicPlayerListener playerListener = new BasicPlayerListener(this);
 	static String message;
+	protected static Configuration CONFIG;
 
 	
 	@Override
@@ -31,13 +34,25 @@ public class LeaveMsg extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_KICK, this.playerListener, Event.Priority.Normal, this);
 		
+		CONFIG = new Configuration(new File(this.getDataFolder(), "config.yml"));
+		CONFIG.load();
+		if(CONFIG.getProperty("leavemessage") == null) CONFIG.setProperty("leavemessage", " left the game: ");
+		CONFIG.save();
+
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
 		ChatColor RED = ChatColor.RED;
 		ChatColor YELLOW = ChatColor.YELLOW;
 		ChatColor GREEN = ChatColor.GREEN;
+		Player player = null;
+		if (sender instanceof Player) {
+			player = (Player)sender;
+		}
 			if (cmd.getName().equalsIgnoreCase("quit")) {
+				if (player == null) {
+					System.out.println("Only players can use this command.");
+				} else 
 				if(args.length==0) {
 					sender.sendMessage(RED + "Please specify a reason.");
 					return false;				
@@ -47,9 +62,8 @@ public class LeaveMsg extends JavaPlugin {
 						leaveMessage = leaveMessage + args[i] + " ";
 					}
 						if (sender instanceof Player) {
-							getServer().broadcastMessage(YELLOW + sender.getName() + (" left the game: ") + GREEN + leaveMessage);
+							getServer().broadcastMessage(YELLOW + sender.getName() + CONFIG.getString("leavemessage") + GREEN + leaveMessage);
 							((Player) sender).kickPlayer(("You left: " + leaveMessage));
-							System.out.println(sender.getName() + (" lost connection: disconnect.quitting"));
 							
 					}
 				}
