@@ -37,6 +37,9 @@ public class LeaveMsg extends JavaPlugin {
 		CONFIG = new Configuration(new File(this.getDataFolder(), "config.yml"));
 		CONFIG.load();
 		if(CONFIG.getProperty("leavemessage") == null) CONFIG.setProperty("leavemessage", " left the game: ");
+		if(CONFIG.getProperty("emptystring") == null) CONFIG.setProperty("emptystring", "Please specify a reason.");
+		if(CONFIG.getProperty("kickmessage") == null) CONFIG.setProperty("kickmessage", "You left: ");
+		if(CONFIG.getProperty("console") == null) CONFIG.setProperty("console", "Only players can use this command.");
 		CONFIG.save();
 
 	}
@@ -49,12 +52,12 @@ public class LeaveMsg extends JavaPlugin {
 		if (sender instanceof Player) {
 			player = (Player)sender;
 		}
-			if (cmd.getName().equalsIgnoreCase("quit")) {
+			if ((cmd.getName().equalsIgnoreCase("quit")) || cmd.getName().equalsIgnoreCase("q")) {
 				if (player == null) {
-					System.out.println("Only players can use this command.");
+					System.out.println(CONFIG.getString("console"));
 				} else 
 				if(args.length==0) {
-					sender.sendMessage(RED + "Please specify a reason.");
+					sender.sendMessage(RED + CONFIG.getString("emptystring"));
 					return false;				
 				} else {
 					String leaveMessage = "";
@@ -63,9 +66,9 @@ public class LeaveMsg extends JavaPlugin {
 					}
 						if (sender instanceof Player) {
 							getServer().broadcastMessage(YELLOW + sender.getName() + CONFIG.getString("leavemessage") + GREEN + leaveMessage);
-							((Player) sender).kickPlayer(("You left: " + leaveMessage));
+							((Player) sender).kickPlayer(CONFIG.getString("kickmessage") + leaveMessage);
 							
-					}
+					} 
 				}
 
 			}	
